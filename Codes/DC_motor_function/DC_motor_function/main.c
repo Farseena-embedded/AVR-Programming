@@ -15,6 +15,7 @@
 void cw(unsigned int delay);
 void ccw(unsigned int delay);
 void stp(unsigned int delay);
+void delay_ms(unsigned int ms);
 
 int main(void)
 {
@@ -35,7 +36,7 @@ void cw(unsigned int delay)
 {
     PORTB |= (1 << PB4);      // PB4 = HIGH
     PORTB &= ~(1 << PB5);     // PB5 = LOW
-    _delay_ms(delay);
+    delay_ms(delay);
 }
 
 /* Counter-clockwise rotation */
@@ -43,7 +44,7 @@ void ccw(unsigned int delay)
 {
     PORTB |= (1 << PB5);      // PB5 = HIGH
     PORTB &= ~(1 << PB4);     // PB4 = LOW
-    _delay_ms(delay);
+    delay_ms(delay);
 }
 
 /* Motor stop */
@@ -51,6 +52,17 @@ void stp(unsigned int delay)
 {
     PORTB &= ~(1 << PB4);     // PB4 = LOW
     PORTB &= ~(1 << PB5);     // PB5 = LOW
-    _delay_ms(delay);
+    delay_ms(delay);
 }
+
+//Long delay using loop
+void delay_ms(unsigned int ms)
+{
+	unsigned int i;
+	for(i=0;i<ms;i++)
+	{
+		_delay_ms(1);
+	}
+}
+
 

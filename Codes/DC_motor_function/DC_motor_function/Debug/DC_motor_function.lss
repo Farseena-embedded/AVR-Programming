@@ -3,29 +3,29 @@ DC_motor_function.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000160  2**0
+  0 .data         00000000  00800100  00800100  00000154  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         0000010c  00000000  00000000  00000054  2**1
+  1 .text         00000100  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000160  2**0
+  2 .comment      00000030  00000000  00000000  00000154  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000190  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000184  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000038  00000000  00000000  000001d0  2**0
+  4 .debug_aranges 00000040  00000000  00000000  000001c4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000848  00000000  00000000  00000208  2**0
+  5 .debug_info   00000859  00000000  00000000  00000204  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000006ab  00000000  00000000  00000a50  2**0
+  6 .debug_abbrev 000006e3  00000000  00000000  00000a5d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000002d2  00000000  00000000  000010fb  2**0
+  7 .debug_line   00000303  00000000  00000000  00001140  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000054  00000000  00000000  000013d0  2**2
+  8 .debug_frame  00000064  00000000  00000000  00001444  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000003a9  00000000  00000000  00001424  2**0
+  9 .debug_str    000003a9  00000000  00000000  000014a8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    0000014a  00000000  00000000  000017cd  2**0
+ 10 .debug_loc    000000dc  00000000  00000000  00001851  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000028  00000000  00000000  00001917  2**0
+ 11 .debug_ranges 00000030  00000000  00000000  0000192d  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -65,126 +65,132 @@ Disassembly of section .text:
   6e:	d8 e0       	ldi	r29, 0x08	; 8
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
-  74:	0e 94 70 00 	call	0xe0	; 0xe0 <main>
-  78:	0c 94 84 00 	jmp	0x108	; 0x108 <_exit>
+  74:	0e 94 6a 00 	call	0xd4	; 0xd4 <main>
+  78:	0c 94 7e 00 	jmp	0xfc	; 0xfc <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
-00000080 <cw>:
-}
+00000080 <delay_ms>:
 
-/* Clockwise rotation */
-void cw(unsigned int delay)
+//Long delay using loop
+void delay_ms(unsigned int ms)
 {
-    PORTB |= (1 << PB4);      // PB4 = HIGH
-  80:	85 b1       	in	r24, 0x05	; 5
-  82:	80 61       	ori	r24, 0x10	; 16
-  84:	85 b9       	out	0x05, r24	; 5
-    PORTB &= ~(1 << PB5);     // PB5 = LOW
-  86:	85 b1       	in	r24, 0x05	; 5
-  88:	8f 7d       	andi	r24, 0xDF	; 223
-  8a:	85 b9       	out	0x05, r24	; 5
+	unsigned int i;
+	for(i=0;i<ms;i++)
+  80:	20 e0       	ldi	r18, 0x00	; 0
+  82:	30 e0       	ldi	r19, 0x00	; 0
+  84:	08 c0       	rjmp	.+16     	; 0x96 <delay_ms+0x16>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
-  8c:	2f ef       	ldi	r18, 0xFF	; 255
-  8e:	81 ee       	ldi	r24, 0xE1	; 225
-  90:	94 e0       	ldi	r25, 0x04	; 4
-  92:	21 50       	subi	r18, 0x01	; 1
-  94:	80 40       	sbci	r24, 0x00	; 0
-  96:	90 40       	sbci	r25, 0x00	; 0
-  98:	e1 f7       	brne	.-8      	; 0x92 <cw+0x12>
-  9a:	00 c0       	rjmp	.+0      	; 0x9c <cw+0x1c>
-  9c:	00 00       	nop
-  9e:	08 95       	ret
+  86:	ef e9       	ldi	r30, 0x9F	; 159
+  88:	ff e0       	ldi	r31, 0x0F	; 15
+  8a:	31 97       	sbiw	r30, 0x01	; 1
+  8c:	f1 f7       	brne	.-4      	; 0x8a <delay_ms+0xa>
+  8e:	00 c0       	rjmp	.+0      	; 0x90 <delay_ms+0x10>
+  90:	00 00       	nop
+  92:	2f 5f       	subi	r18, 0xFF	; 255
+  94:	3f 4f       	sbci	r19, 0xFF	; 255
+  96:	28 17       	cp	r18, r24
+  98:	39 07       	cpc	r19, r25
+  9a:	a8 f3       	brcs	.-22     	; 0x86 <delay_ms+0x6>
+	{
+		_delay_ms(1);
+	}
+}
+  9c:	08 95       	ret
 
-000000a0 <ccw>:
+0000009e <cw>:
+}
+
+/* Clockwise rotation */
+void cw(unsigned int delay)
+{
+    PORTB |= (1 << PB4);      // PB4 = HIGH
+  9e:	25 b1       	in	r18, 0x05	; 5
+  a0:	20 61       	ori	r18, 0x10	; 16
+  a2:	25 b9       	out	0x05, r18	; 5
+    PORTB &= ~(1 << PB5);     // PB5 = LOW
+  a4:	25 b1       	in	r18, 0x05	; 5
+  a6:	2f 7d       	andi	r18, 0xDF	; 223
+  a8:	25 b9       	out	0x05, r18	; 5
+    delay_ms(delay);
+  aa:	0e 94 40 00 	call	0x80	; 0x80 <delay_ms>
+  ae:	08 95       	ret
+
+000000b0 <ccw>:
 }
 
 /* Counter-clockwise rotation */
 void ccw(unsigned int delay)
 {
     PORTB |= (1 << PB5);      // PB5 = HIGH
-  a0:	85 b1       	in	r24, 0x05	; 5
-  a2:	80 62       	ori	r24, 0x20	; 32
-  a4:	85 b9       	out	0x05, r24	; 5
+  b0:	25 b1       	in	r18, 0x05	; 5
+  b2:	20 62       	ori	r18, 0x20	; 32
+  b4:	25 b9       	out	0x05, r18	; 5
     PORTB &= ~(1 << PB4);     // PB4 = LOW
-  a6:	85 b1       	in	r24, 0x05	; 5
-  a8:	8f 7e       	andi	r24, 0xEF	; 239
-  aa:	85 b9       	out	0x05, r24	; 5
-  ac:	2f ef       	ldi	r18, 0xFF	; 255
-  ae:	81 ee       	ldi	r24, 0xE1	; 225
-  b0:	94 e0       	ldi	r25, 0x04	; 4
-  b2:	21 50       	subi	r18, 0x01	; 1
-  b4:	80 40       	sbci	r24, 0x00	; 0
-  b6:	90 40       	sbci	r25, 0x00	; 0
-  b8:	e1 f7       	brne	.-8      	; 0xb2 <ccw+0x12>
-  ba:	00 c0       	rjmp	.+0      	; 0xbc <ccw+0x1c>
-  bc:	00 00       	nop
-  be:	08 95       	ret
+  b6:	25 b1       	in	r18, 0x05	; 5
+  b8:	2f 7e       	andi	r18, 0xEF	; 239
+  ba:	25 b9       	out	0x05, r18	; 5
+    delay_ms(delay);
+  bc:	0e 94 40 00 	call	0x80	; 0x80 <delay_ms>
+  c0:	08 95       	ret
 
-000000c0 <stp>:
+000000c2 <stp>:
 }
 
 /* Motor stop */
 void stp(unsigned int delay)
 {
     PORTB &= ~(1 << PB4);     // PB4 = LOW
-  c0:	85 b1       	in	r24, 0x05	; 5
-  c2:	8f 7e       	andi	r24, 0xEF	; 239
-  c4:	85 b9       	out	0x05, r24	; 5
+  c2:	25 b1       	in	r18, 0x05	; 5
+  c4:	2f 7e       	andi	r18, 0xEF	; 239
+  c6:	25 b9       	out	0x05, r18	; 5
     PORTB &= ~(1 << PB5);     // PB5 = LOW
-  c6:	85 b1       	in	r24, 0x05	; 5
-  c8:	8f 7d       	andi	r24, 0xDF	; 223
-  ca:	85 b9       	out	0x05, r24	; 5
-  cc:	2f ef       	ldi	r18, 0xFF	; 255
-  ce:	81 ee       	ldi	r24, 0xE1	; 225
-  d0:	94 e0       	ldi	r25, 0x04	; 4
-  d2:	21 50       	subi	r18, 0x01	; 1
-  d4:	80 40       	sbci	r24, 0x00	; 0
-  d6:	90 40       	sbci	r25, 0x00	; 0
-  d8:	e1 f7       	brne	.-8      	; 0xd2 <stp+0x12>
-  da:	00 c0       	rjmp	.+0      	; 0xdc <stp+0x1c>
-  dc:	00 00       	nop
-  de:	08 95       	ret
+  c8:	25 b1       	in	r18, 0x05	; 5
+  ca:	2f 7d       	andi	r18, 0xDF	; 223
+  cc:	25 b9       	out	0x05, r18	; 5
+    delay_ms(delay);
+  ce:	0e 94 40 00 	call	0x80	; 0x80 <delay_ms>
+  d2:	08 95       	ret
 
-000000e0 <main>:
-void stp(unsigned int delay);
+000000d4 <main>:
+void delay_ms(unsigned int ms);
 
 int main(void)
 {
     /* Set PB4 and PB5 as output */
     DDRB |= (1 << DDB4) | (1 << DDB5);
-  e0:	84 b1       	in	r24, 0x04	; 4
-  e2:	80 63       	ori	r24, 0x30	; 48
-  e4:	84 b9       	out	0x04, r24	; 4
+  d4:	84 b1       	in	r24, 0x04	; 4
+  d6:	80 63       	ori	r24, 0x30	; 48
+  d8:	84 b9       	out	0x04, r24	; 4
 
     while (1)
     {
         cw(2000);     // Rotate motor clockwise for 2 seconds
-  e6:	80 ed       	ldi	r24, 0xD0	; 208
-  e8:	97 e0       	ldi	r25, 0x07	; 7
-  ea:	0e 94 40 00 	call	0x80	; 0x80 <cw>
+  da:	80 ed       	ldi	r24, 0xD0	; 208
+  dc:	97 e0       	ldi	r25, 0x07	; 7
+  de:	0e 94 4f 00 	call	0x9e	; 0x9e <cw>
         stp(2000);    // Stop motor for 2 seconds
-  ee:	80 ed       	ldi	r24, 0xD0	; 208
-  f0:	97 e0       	ldi	r25, 0x07	; 7
-  f2:	0e 94 60 00 	call	0xc0	; 0xc0 <stp>
+  e2:	80 ed       	ldi	r24, 0xD0	; 208
+  e4:	97 e0       	ldi	r25, 0x07	; 7
+  e6:	0e 94 61 00 	call	0xc2	; 0xc2 <stp>
         ccw(2000);    // Rotate motor counter-clockwise for 2 seconds
-  f6:	80 ed       	ldi	r24, 0xD0	; 208
-  f8:	97 e0       	ldi	r25, 0x07	; 7
-  fa:	0e 94 50 00 	call	0xa0	; 0xa0 <ccw>
+  ea:	80 ed       	ldi	r24, 0xD0	; 208
+  ec:	97 e0       	ldi	r25, 0x07	; 7
+  ee:	0e 94 58 00 	call	0xb0	; 0xb0 <ccw>
         stp(2000);    // Stop motor for 2 seconds
-  fe:	80 ed       	ldi	r24, 0xD0	; 208
- 100:	97 e0       	ldi	r25, 0x07	; 7
- 102:	0e 94 60 00 	call	0xc0	; 0xc0 <stp>
- 106:	ef cf       	rjmp	.-34     	; 0xe6 <main+0x6>
+  f2:	80 ed       	ldi	r24, 0xD0	; 208
+  f4:	97 e0       	ldi	r25, 0x07	; 7
+  f6:	0e 94 61 00 	call	0xc2	; 0xc2 <stp>
+  fa:	ef cf       	rjmp	.-34     	; 0xda <main+0x6>
 
-00000108 <_exit>:
- 108:	f8 94       	cli
+000000fc <_exit>:
+  fc:	f8 94       	cli
 
-0000010a <__stop_program>:
- 10a:	ff cf       	rjmp	.-2      	; 0x10a <__stop_program>
+000000fe <__stop_program>:
+  fe:	ff cf       	rjmp	.-2      	; 0xfe <__stop_program>
