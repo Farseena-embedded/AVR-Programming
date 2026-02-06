@@ -5,19 +5,7 @@
  * Author : acer cc
  */ 
 
-/*
- * Timer0-Prescalar mode.c
- *
- * Created: 2/5/2026 4:03:06 PM
- * Author : acer cc
- */ 
 
-/*
- * Timer0_Normal mode.c
- *
- * Created: 2/5/2026 2:31:55 PM
- * Author : acer cc
- */ 
 
 #define F_CPU 16000000UL
 #include <avr/io.h>
