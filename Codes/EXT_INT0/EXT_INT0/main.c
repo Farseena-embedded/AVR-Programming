@@ -13,7 +13,7 @@
 ISR(INT0_vect)  //Interrupt vector table
 {
 	PORTB|=(1<<PB5);
-	_delay_ms(5000);
+	_delay_ms(1000);
 	PORTB&=~(1<<PB5);
 	
 }

@@ -97,15 +97,15 @@ ISR(INT0_vect)  //Interrupt vector table
 
 	__builtin_avr_delay_cycles(__ticks_dc);
   96:	2f ef       	ldi	r18, 0xFF	; 255
-  98:	83 e2       	ldi	r24, 0x23	; 35
-  9a:	94 ef       	ldi	r25, 0xF4	; 244
+  98:	83 ed       	ldi	r24, 0xD3	; 211
+  9a:	90 e3       	ldi	r25, 0x30	; 48
   9c:	21 50       	subi	r18, 0x01	; 1
   9e:	80 40       	sbci	r24, 0x00	; 0
   a0:	90 40       	sbci	r25, 0x00	; 0
   a2:	e1 f7       	brne	.-8      	; 0x9c <__vector_1+0x1c>
   a4:	00 c0       	rjmp	.+0      	; 0xa6 <__vector_1+0x26>
   a6:	00 00       	nop
-	_delay_ms(5000);
+	_delay_ms(1000);
 	PORTB&=~(1<<PB5);
   a8:	85 b1       	in	r24, 0x05	; 5
   aa:	8f 7d       	andi	r24, 0xDF	; 223
