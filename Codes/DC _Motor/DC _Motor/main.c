@@ -17,20 +17,20 @@ int main(void)
 	{
 		PORTB |=(1<<PB4);        // Making PB4 = HIGH
 		PORTB &=~(1 << PB5);   // PB5=LOW
-		_delay_ms(2000);        // 2 Second delay
+		_delay_ms(4000);        // 2 Second delay
 		
 		 // Motor Stop
 		 PORTB &=~(1 << PB4);    // PB4=LOW
 		 PORTB &=~(1 << PB5);   // PB5=LOW
-		 _delay_ms(2000);       // 2 seconds delay
+		 _delay_ms(5000);       // 2 seconds delay
 		 
 		 PORTB |=(1 << PB5);   // PB5=HIGH
 		 PORTB &=~(1<<PB4);    //  PB4 = LOW
-		_delay_ms(2000);       // 2 second delay
+		_delay_ms(4000);       // 2 second delay
 		
 		 PORTB &=~(1 << PB4);  // PB4=LOW
 		 PORTB &=~(1 << PB5);  // PB5=LOW
-		 _delay_ms(2000);       // 2 seconds delay
+		 _delay_ms(5000);       // 2 seconds delay
 	}
 }
 
