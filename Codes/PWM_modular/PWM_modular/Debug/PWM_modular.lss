@@ -3,11 +3,11 @@ PWM_modular.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000174  2**0
+  0 .data         00000000  00800100  00800100  00000172  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000120  00000000  00000000  00000054  2**1
+  1 .text         0000011e  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000174  2**0
+  2 .comment      00000030  00000000  00000000  00000172  2**0
                   CONTENTS, READONLY
   3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000001a4  2**2
                   CONTENTS, READONLY
@@ -17,15 +17,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   6 .debug_abbrev 00000699  00000000  00000000  0000097e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000026e  00000000  00000000  00001017  2**0
+  7 .debug_line   00000268  00000000  00000000  00001017  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000058  00000000  00000000  00001288  2**2
+  8 .debug_frame  00000058  00000000  00000000  00001280  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    0000037b  00000000  00000000  000012e0  2**0
+  9 .debug_str    0000037b  00000000  00000000  000012d8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000029  00000000  00000000  0000165b  2**0
+ 10 .debug_loc    00000029  00000000  00000000  00001653  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000028  00000000  00000000  00001684  2**0
+ 11 .debug_ranges 00000028  00000000  00000000  0000167c  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -66,7 +66,7 @@ Disassembly of section .text:
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
   74:	0e 94 40 00 	call	0x80	; 0x80 <main>
-  78:	0c 94 8e 00 	jmp	0x11c	; 0x11c <_exit>
+  78:	0c 94 8d 00 	jmp	0x11a	; 0x11a <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -79,127 +79,124 @@ int main(void)
 {
    PWM0_init(); //Initializing PWM
   80:	0e 94 46 00 	call	0x8c	; 0x8c <PWM0_init>
-   PWM0_Duty(100);  //calling PWM with duty cycle=40
-  84:	84 e6       	ldi	r24, 0x64	; 100
-  86:	0e 94 5b 00 	call	0xb6	; 0xb6 <PWM0_Duty>
+   PWM0_Duty(40);  //calling PWM with duty cycle=40
+  84:	88 e2       	ldi	r24, 0x28	; 40
+  86:	0e 94 5a 00 	call	0xb4	; 0xb4 <PWM0_Duty>
   8a:	ff cf       	rjmp	.-2      	; 0x8a <main+0xa>
 
 0000008c <PWM0_init>:
-#include <avr/io.h>
-
 
 void PWM0_init(void)
 {
-	TCNT0=0;
-  8c:	16 bc       	out	0x26, r1	; 38
+
 	// OC0A pin output
 	DDRD|=(1<<PD6); //Configuring PD6 as output
-  8e:	8a b1       	in	r24, 0x0a	; 10
-  90:	80 64       	ori	r24, 0x40	; 64
-  92:	8a b9       	out	0x0a, r24	; 10
+  8c:	8a b1       	in	r24, 0x0a	; 10
+  8e:	80 64       	ori	r24, 0x40	; 64
+  90:	8a b9       	out	0x0a, r24	; 10
 	// Configuring Fast PWM mode
 	TCCR0A|=(1<<WGM00)|(1<<WGM01);
-  94:	84 b5       	in	r24, 0x24	; 36
-  96:	83 60       	ori	r24, 0x03	; 3
-  98:	84 bd       	out	0x24, r24	; 36
+  92:	84 b5       	in	r24, 0x24	; 36
+  94:	83 60       	ori	r24, 0x03	; 3
+  96:	84 bd       	out	0x24, r24	; 36
 	//Non inverting
 	TCCR0A|=(1<<COM0A1);
-  9a:	84 b5       	in	r24, 0x24	; 36
-  9c:	80 68       	ori	r24, 0x80	; 128
-  9e:	84 bd       	out	0x24, r24	; 36
+  98:	84 b5       	in	r24, 0x24	; 36
+  9a:	80 68       	ori	r24, 0x80	; 128
+  9c:	84 bd       	out	0x24, r24	; 36
 	TCCR0A&=~(1<<COM0A0);
-  a0:	84 b5       	in	r24, 0x24	; 36
-  a2:	8f 7b       	andi	r24, 0xBF	; 191
-  a4:	84 bd       	out	0x24, r24	; 36
+  9e:	84 b5       	in	r24, 0x24	; 36
+  a0:	8f 7b       	andi	r24, 0xBF	; 191
+  a2:	84 bd       	out	0x24, r24	; 36
 	//Configuring Timer0 for 64 pre-scalar 
 	TCCR0B|=(1<<CS00)|(1<<CS01);
-  a6:	85 b5       	in	r24, 0x25	; 37
-  a8:	83 60       	ori	r24, 0x03	; 3
-  aa:	85 bd       	out	0x25, r24	; 37
+  a4:	85 b5       	in	r24, 0x25	; 37
+  a6:	83 60       	ori	r24, 0x03	; 3
+  a8:	85 bd       	out	0x25, r24	; 37
 	TCCR0B&=~(1<<CS02);
-  ac:	85 b5       	in	r24, 0x25	; 37
-  ae:	8b 7f       	andi	r24, 0xFB	; 251
-  b0:	85 bd       	out	0x25, r24	; 37
+  aa:	85 b5       	in	r24, 0x25	; 37
+  ac:	8b 7f       	andi	r24, 0xFB	; 251
+  ae:	85 bd       	out	0x25, r24	; 37
 	OCR0A=0; // initially 0% duty cycle
-  b2:	17 bc       	out	0x27, r1	; 39
-  b4:	08 95       	ret
+  b0:	17 bc       	out	0x27, r1	; 39
+  b2:	08 95       	ret
 
-000000b6 <PWM0_Duty>:
+000000b4 <PWM0_Duty>:
 }
 	
 void PWM0_Duty(uint8_t duty_percentage)
 {
 	if(duty_percentage>100) //To limit entering duty cycle value above 100
-  b6:	85 36       	cpi	r24, 0x65	; 101
-  b8:	08 f0       	brcs	.+2      	; 0xbc <PWM0_Duty+0x6>
+  b4:	85 36       	cpi	r24, 0x65	; 101
+  b6:	08 f0       	brcs	.+2      	; 0xba <PWM0_Duty+0x6>
 	{
 		duty_percentage=100;
-  ba:	84 e6       	ldi	r24, 0x64	; 100
+  b8:	84 e6       	ldi	r24, 0x64	; 100
 	}
 	OCR0A=(uint8_t)((duty_percentage*256)/100);
-  bc:	98 2f       	mov	r25, r24
-  be:	80 e0       	ldi	r24, 0x00	; 0
-  c0:	64 e6       	ldi	r22, 0x64	; 100
-  c2:	70 e0       	ldi	r23, 0x00	; 0
-  c4:	0e 94 66 00 	call	0xcc	; 0xcc <__divmodhi4>
-  c8:	67 bd       	out	0x27, r22	; 39
-  ca:	08 95       	ret
+  ba:	98 2f       	mov	r25, r24
+  bc:	80 e0       	ldi	r24, 0x00	; 0
+  be:	64 e6       	ldi	r22, 0x64	; 100
+  c0:	70 e0       	ldi	r23, 0x00	; 0
+  c2:	0e 94 65 00 	call	0xca	; 0xca <__divmodhi4>
+  c6:	67 bd       	out	0x27, r22	; 39
+  c8:	08 95       	ret
 
-000000cc <__divmodhi4>:
-  cc:	97 fb       	bst	r25, 7
-  ce:	07 2e       	mov	r0, r23
-  d0:	16 f4       	brtc	.+4      	; 0xd6 <__divmodhi4+0xa>
-  d2:	00 94       	com	r0
-  d4:	07 d0       	rcall	.+14     	; 0xe4 <__divmodhi4_neg1>
-  d6:	77 fd       	sbrc	r23, 7
-  d8:	09 d0       	rcall	.+18     	; 0xec <__divmodhi4_neg2>
-  da:	0e 94 7a 00 	call	0xf4	; 0xf4 <__udivmodhi4>
-  de:	07 fc       	sbrc	r0, 7
-  e0:	05 d0       	rcall	.+10     	; 0xec <__divmodhi4_neg2>
-  e2:	3e f4       	brtc	.+14     	; 0xf2 <__divmodhi4_exit>
+000000ca <__divmodhi4>:
+  ca:	97 fb       	bst	r25, 7
+  cc:	07 2e       	mov	r0, r23
+  ce:	16 f4       	brtc	.+4      	; 0xd4 <__divmodhi4+0xa>
+  d0:	00 94       	com	r0
+  d2:	07 d0       	rcall	.+14     	; 0xe2 <__divmodhi4_neg1>
+  d4:	77 fd       	sbrc	r23, 7
+  d6:	09 d0       	rcall	.+18     	; 0xea <__divmodhi4_neg2>
+  d8:	0e 94 79 00 	call	0xf2	; 0xf2 <__udivmodhi4>
+  dc:	07 fc       	sbrc	r0, 7
+  de:	05 d0       	rcall	.+10     	; 0xea <__divmodhi4_neg2>
+  e0:	3e f4       	brtc	.+14     	; 0xf0 <__divmodhi4_exit>
 
-000000e4 <__divmodhi4_neg1>:
-  e4:	90 95       	com	r25
-  e6:	81 95       	neg	r24
-  e8:	9f 4f       	sbci	r25, 0xFF	; 255
-  ea:	08 95       	ret
+000000e2 <__divmodhi4_neg1>:
+  e2:	90 95       	com	r25
+  e4:	81 95       	neg	r24
+  e6:	9f 4f       	sbci	r25, 0xFF	; 255
+  e8:	08 95       	ret
 
-000000ec <__divmodhi4_neg2>:
-  ec:	70 95       	com	r23
-  ee:	61 95       	neg	r22
-  f0:	7f 4f       	sbci	r23, 0xFF	; 255
+000000ea <__divmodhi4_neg2>:
+  ea:	70 95       	com	r23
+  ec:	61 95       	neg	r22
+  ee:	7f 4f       	sbci	r23, 0xFF	; 255
 
-000000f2 <__divmodhi4_exit>:
-  f2:	08 95       	ret
+000000f0 <__divmodhi4_exit>:
+  f0:	08 95       	ret
 
-000000f4 <__udivmodhi4>:
-  f4:	aa 1b       	sub	r26, r26
-  f6:	bb 1b       	sub	r27, r27
-  f8:	51 e1       	ldi	r21, 0x11	; 17
-  fa:	07 c0       	rjmp	.+14     	; 0x10a <__udivmodhi4_ep>
+000000f2 <__udivmodhi4>:
+  f2:	aa 1b       	sub	r26, r26
+  f4:	bb 1b       	sub	r27, r27
+  f6:	51 e1       	ldi	r21, 0x11	; 17
+  f8:	07 c0       	rjmp	.+14     	; 0x108 <__udivmodhi4_ep>
 
-000000fc <__udivmodhi4_loop>:
-  fc:	aa 1f       	adc	r26, r26
-  fe:	bb 1f       	adc	r27, r27
- 100:	a6 17       	cp	r26, r22
- 102:	b7 07       	cpc	r27, r23
- 104:	10 f0       	brcs	.+4      	; 0x10a <__udivmodhi4_ep>
- 106:	a6 1b       	sub	r26, r22
- 108:	b7 0b       	sbc	r27, r23
+000000fa <__udivmodhi4_loop>:
+  fa:	aa 1f       	adc	r26, r26
+  fc:	bb 1f       	adc	r27, r27
+  fe:	a6 17       	cp	r26, r22
+ 100:	b7 07       	cpc	r27, r23
+ 102:	10 f0       	brcs	.+4      	; 0x108 <__udivmodhi4_ep>
+ 104:	a6 1b       	sub	r26, r22
+ 106:	b7 0b       	sbc	r27, r23
 
-0000010a <__udivmodhi4_ep>:
- 10a:	88 1f       	adc	r24, r24
- 10c:	99 1f       	adc	r25, r25
- 10e:	5a 95       	dec	r21
- 110:	a9 f7       	brne	.-22     	; 0xfc <__udivmodhi4_loop>
- 112:	80 95       	com	r24
- 114:	90 95       	com	r25
- 116:	bc 01       	movw	r22, r24
- 118:	cd 01       	movw	r24, r26
- 11a:	08 95       	ret
+00000108 <__udivmodhi4_ep>:
+ 108:	88 1f       	adc	r24, r24
+ 10a:	99 1f       	adc	r25, r25
+ 10c:	5a 95       	dec	r21
+ 10e:	a9 f7       	brne	.-22     	; 0xfa <__udivmodhi4_loop>
+ 110:	80 95       	com	r24
+ 112:	90 95       	com	r25
+ 114:	bc 01       	movw	r22, r24
+ 116:	cd 01       	movw	r24, r26
+ 118:	08 95       	ret
 
-0000011c <_exit>:
- 11c:	f8 94       	cli
+0000011a <_exit>:
+ 11a:	f8 94       	cli
 
-0000011e <__stop_program>:
- 11e:	ff cf       	rjmp	.-2      	; 0x11e <__stop_program>
+0000011c <__stop_program>:
+ 11c:	ff cf       	rjmp	.-2      	; 0x11c <__stop_program>
