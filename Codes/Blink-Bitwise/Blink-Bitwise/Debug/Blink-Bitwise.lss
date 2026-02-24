@@ -95,22 +95,22 @@ int main(void)
 
 	__builtin_avr_delay_cycles(__ticks_dc);
   8c:	2f ef       	ldi	r18, 0xFF	; 255
-  8e:	83 ed       	ldi	r24, 0xD3	; 211
-  90:	90 e3       	ldi	r25, 0x30	; 48
+  8e:	8b e7       	ldi	r24, 0x7B	; 123
+  90:	92 e9       	ldi	r25, 0x92	; 146
   92:	21 50       	subi	r18, 0x01	; 1
   94:	80 40       	sbci	r24, 0x00	; 0
   96:	90 40       	sbci	r25, 0x00	; 0
   98:	e1 f7       	brne	.-8      	; 0x92 <main+0x12>
   9a:	00 c0       	rjmp	.+0      	; 0x9c <main+0x1c>
   9c:	00 00       	nop
-		_delay_ms(1000);  // 1 Second delay
+		_delay_ms(3000);  // 1 Second delay
 		PORTB&=~(1<<PB5);  // Making PB5 = LOW
   9e:	85 b1       	in	r24, 0x05	; 5
   a0:	8f 7d       	andi	r24, 0xDF	; 223
   a2:	85 b9       	out	0x05, r24	; 5
   a4:	2f ef       	ldi	r18, 0xFF	; 255
-  a6:	83 ed       	ldi	r24, 0xD3	; 211
-  a8:	90 e3       	ldi	r25, 0x30	; 48
+  a6:	8b e7       	ldi	r24, 0x7B	; 123
+  a8:	92 e9       	ldi	r25, 0x92	; 146
   aa:	21 50       	subi	r18, 0x01	; 1
   ac:	80 40       	sbci	r24, 0x00	; 0
   ae:	90 40       	sbci	r25, 0x00	; 0

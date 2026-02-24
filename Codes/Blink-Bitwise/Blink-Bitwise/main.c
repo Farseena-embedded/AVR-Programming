@@ -16,9 +16,9 @@ int main(void)
        while (1) 
     {
 		PORTB|=(1<<PB5);   // Making PB5 = HIGH
-		_delay_ms(1000);  // 1 Second delay
+		_delay_ms(3000);  // 1 Second delay
 		PORTB&=~(1<<PB5);  // Making PB5 = LOW
-		_delay_ms(1000);   // 1000ms delay
+		_delay_ms(3000);   // 1000ms delay
     }
 }
 
